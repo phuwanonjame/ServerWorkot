@@ -14,8 +14,9 @@ app.use((req, res, next) => {
 
 const uri = process.env.MONGODB_URI || "your_default_mongodb_uri";
 
+
 app.get('/testConnection', async (req, res) => {
-  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true,  ssl: true,  });
   try {
     await client.connect();
     res.status(200).json({ message: "Connection to MongoDB was successful!" });
