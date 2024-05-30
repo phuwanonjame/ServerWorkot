@@ -13,10 +13,15 @@ app.use((req, res, next) => {
 });
 
 const uri = process.env.MONGODB_URI || "your_default_mongodb_uri";
-
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  ssl: true,
+  tls:true, // เพิ่มตัวเลือกนี้เพื่อเปิดใช้งาน TLS/SSL
+};
 
 app.get('/testConnection', async (req, res) => {
-  const client = new MongoClient(uri);
+  const client = new MongoClient(uri,options);
   try {
     await client.connect();
     res.status(200).json({ message: "Connection to MongoDB was successful!" });
