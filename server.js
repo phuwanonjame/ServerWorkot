@@ -45,7 +45,7 @@ app.get('/User', async (req, res) => {
       const user = await client.db("databaseOT").collection('User').findOne({ "Username": Username });
       if (user) {
         if (user.Password === Password) {
-          res.status(200).json({ message: "Login Successful" });
+          res.status(200).json([user]);
         } else {
           res.status(401).json({ message: "Invalid password" });
         }
