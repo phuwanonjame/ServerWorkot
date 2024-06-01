@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 app.use(cors());
@@ -17,11 +18,11 @@ const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   ssl: true,
-  tls:true, // เพิ่มตัวเลือกนี้เพื่อเปิดใช้งาน TLS/SSL
+  tls: true, 
 };
 
 app.get('/testConnection', async (req, res) => {
-  const client = new MongoClient(uri,options);
+  const client = new MongoClient(uri, options);
   try {
     await client.connect();
     res.status(200).json({ message: "Connection to MongoDB was successful!" });
@@ -39,7 +40,7 @@ app.get('/User', async (req, res) => {
   if (status == 1) {
     const { Username, Password } = req.query;
 
-    const client = new MongoClient(uri);
+    const client = new MongoClient(uri, options);
     try {
       await client.connect();
       const user = await client.db("databaseOT").collection('User').findOne({ "Username": Username });
@@ -62,7 +63,7 @@ app.get('/User', async (req, res) => {
     const ID = parseInt(req.query.IDuser, 10);
     console.log(ID);
     console.log(status);
-    const client = new MongoClient(uri);
+    const client = new MongoClient(uri, options);
 
     try {
       await client.connect();
@@ -84,7 +85,7 @@ app.get('/User', async (req, res) => {
 app.get("/loadworkOT", async (req, res) => {
   const ID = parseInt(req.query.ID_user, 10);
   console.log("ID_user", ID);
-  const client = new MongoClient(uri);
+  const client = new MongoClient(uri, options);
 
   try {
     await client.connect();
@@ -110,7 +111,7 @@ app.post('/request', async (req, res) => {
   console.log(data);
   console.log(data.length);
 
-  const client = new MongoClient(uri);
+  const client = new MongoClient(uri, options);
   try {
     await client.connect();
 
@@ -137,6 +138,13 @@ app.post('/request', async (req, res) => {
   } finally {
     await client.close();
   }
+});
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3002;
