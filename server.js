@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const { MongoClient } = require('mongodb');
+const { ObjectId } = require('mongodb').ObjectId;
 const cors = require('cors');
 const path = require('path');
 
@@ -152,7 +153,7 @@ app.put("/delworkOT", async (req, res) => {
     await client.connect(); 
     const collection = client.db("databaseOT").collection("WorkOT");
     const result = await collection.updateOne(
-      { _id: ObjectId(_id) },
+      { _id: ObjectId(_id) }, 
       { $set: { status: 0 } }
     );
     
