@@ -141,7 +141,7 @@ app.post('/request', async (req, res) => {
 });
 
 
-app.delete("/delworkOT/:ID", async (req, res) => {
+app.put("/delworkOT/:ID", async (req, res) => {
   const { ID } = req.params;
   console.log(ID);
   const client = new MongoClient(uri, options);
@@ -149,7 +149,7 @@ app.delete("/delworkOT/:ID", async (req, res) => {
   try {
     await client.connect();
     const collection = client.db("databaseOT").collection("WorkOT");
-    const result = await collection.deleteOne({ _id: new ObjectId(ID) });
+    const result = await collection.updateOne({ _id: new ObjectId(ID) },{$set:{Status:3}});
     
     if (result.deletedCount === 1) {
       res.sendStatus(204); // No Content
