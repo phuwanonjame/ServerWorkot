@@ -149,16 +149,16 @@ app.delete("/delworkOT/:ID", async (req, res) => {
   try {
     await client.connect();
     const collection = client.db("databaseOT").collection("WorkOT");
-    const result = await collection.deleteOne({ _id: `ObjectId('${ID}')` });
+    const result = await collection.deleteOne({ _id: new ObjectId(ID) });
     
     if (result.deletedCount === 1) {
-      res.sendStatus(200);
+      res.sendStatus(204); // No Content
     } else {
-      res.sendStatus(404); 
+      res.sendStatus(404); // Not Found
     }
   } catch (error) {
     console.error("Error during delete:", error);
-    res.sendStatus(500); 
+    res.sendStatus(500); // Internal Server Error
   } finally {
     await client.close();
   }
