@@ -149,7 +149,7 @@ app.delete("/delworkOT/:ID", async (req, res) => {
   try {
     await client.connect();
     const collection = client.db("databaseOT").collection("WorkOT");
-    const result = await collection.deleteOne({ _id: ID });
+    const result = await collection.deleteOne({ _id: `ObjectID('${ID}')` });
     
     if (result.deletedCount === 1) {
       res.sendStatus(200);
