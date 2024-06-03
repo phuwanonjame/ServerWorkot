@@ -140,6 +140,29 @@ app.post('/request', async (req, res) => {
   }
 });
 
+
+app.delete("/delworkOT/:ID", async (req, res) => {
+  const { ID } = req.params;
+  console.log(ID);
+  const client = new MongoClient(uri, options);
+  
+  try {
+    await client.connect();
+    const collection = client.db("databaseOT").collection("WorkOT");
+    const result = await collection.deleteOne({ _id: ID });
+    
+    if (result.deletedCount === 1) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(404); 
+    }
+  } catch (error) {
+    console.error("Error during delete:", error);
+    res.sendStatus(500); 
+  } finally {
+    await client.close();
+  }
+});
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'build')));
 
