@@ -145,7 +145,7 @@ app.post('/request', async (req, res) => {
 
 
 
-app.put("/delworkOT", async (req, res) => {
+app.post("/delworkOT", async (req, res) => {
   const { _id } = req.body; 
   console.log(`Received update request for ID: ${_id}`);
   const client = new MongoClient(uri, options);
