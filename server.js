@@ -152,7 +152,7 @@ app.put("/delworkOT", async (req, res) => {
     await client.connect(); 
     const collection = client.db("databaseOT").collection("WorkOT");
     const result = await collection.updateOne(
-      { _id: ObjectId(_id) }, // Assuming _id is a valid ObjectId
+      { _id: ObjectId(_id) },
       { $set: { status: 0 } }
     );
     
