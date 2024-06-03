@@ -141,32 +141,35 @@ app.post('/request', async (req, res) => {
 });
 
 
-app.put("/delworkOT/:ID", async (req, res) => {
-  const { ID } = req.params;
-  console.log(`Received update request for ID: ${ID}`);
+
+
+
+app.put("/delworkOT", async (req, res) => {
+  const { _id } = req.body; // แก้ไขเป็น _id แทน ID
+  console.log(`Received update request for ID: ${_id}`);
   const client = new MongoClient(uri, options);
-  
   try {
-    await client.connect();
+    await client.connect(); // เชื่อมต่อ MongoDB
     const collection = client.db("databaseOT").collection("WorkOT");
-    const result = await collection.updateOne(
-      { _id: new ObjectId(ID) },
-      { $set: { Status: 3 } }
+    const result = await collection.findByIdAndUpdate(
+      _id, // ใช้ _id แทน id
+      { status: 0 },
     );
     
-    if (result.modifiedCount === 1) {
+    if (result) {
       res.sendStatus(204); // No Content
     } else {
-      console.log(`No document found with ID: ${ID}`);
+      console.log(`No document found with ID: ${_id}`);
       res.sendStatus(404); // Not Found
     }
   } catch (error) {
     console.error("Error during update:", error);
     res.sendStatus(500); // Internal Server Error
   } finally {
-    await client.close();
+    await client.close(); // ปิดการเชื่อมต่อ MongoDB
   }
 });
+
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'build')));
 
