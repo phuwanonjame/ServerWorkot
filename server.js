@@ -143,21 +143,25 @@ app.post('/request', async (req, res) => {
 
 app.put("/delworkOT/:ID", async (req, res) => {
   const { ID } = req.params;
-  console.log(ID);
+  console.log(`Received update request for ID: ${ID}`);
   const client = new MongoClient(uri, options);
   
   try {
     await client.connect();
     const collection = client.db("databaseOT").collection("WorkOT");
-    const result = await collection.updateOne({ _id: new ObjectId(ID) },{$set:{Status:3}});
+    const result = await collection.updateOne(
+      { _id: new ObjectId(ID) },
+      { $set: { Status: 3 } }
+    );
     
-    if (result.deletedCount === 1) {
+    if (result.modifiedCount === 1) {
       res.sendStatus(204); // No Content
     } else {
+      console.log(`No document found with ID: ${ID}`);
       res.sendStatus(404); // Not Found
     }
   } catch (error) {
-    console.error("Error during delete:", error);
+    console.error("Error during update:", error);
     res.sendStatus(500); // Internal Server Error
   } finally {
     await client.close();
