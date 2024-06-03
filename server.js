@@ -154,7 +154,7 @@ app.put("/delworkOT", async (req, res) => {
     const collection = client.db("databaseOT").collection("WorkOT");
     const result = await collection.updateOne(
       { _id: new ObjectId(_id) }, 
-      { $set: { status: 0 } }
+      { $set: { Status: 0 } }
     );
     
     if (result.modifiedCount > 0) {
