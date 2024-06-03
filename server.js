@@ -145,28 +145,28 @@ app.post('/request', async (req, res) => {
 
 
 app.put("/delworkOT", async (req, res) => {
-  const { _id } = req.body; // แก้ไขเป็น _id แทน ID
+  const { _id } = req.body; 
   console.log(`Received update request for ID: ${_id}`);
   const client = new MongoClient(uri, options);
   try {
-    await client.connect(); // เชื่อมต่อ MongoDB
+    await client.connect(); 
     const collection = client.db("databaseOT").collection("WorkOT");
-    const result = await collection.findByIdAndUpdate(
-      _id, // ใช้ _id แทน id
-      { status: 0 },
+    const result = await collection.updateOne(
+      { _id: ObjectId(_id) }, // Assuming _id is a valid ObjectId
+      { $set: { status: 0 } }
     );
     
-    if (result) {
-      res.sendStatus(204); // No Content
+    if (result.modifiedCount > 0) {
+      res.sendStatus(204); 
     } else {
       console.log(`No document found with ID: ${_id}`);
-      res.sendStatus(404); // Not Found
+      res.sendStatus(404); 
     }
   } catch (error) {
     console.error("Error during update:", error);
-    res.sendStatus(500); // Internal Server Error
+    res.sendStatus(500); 
   } finally {
-    await client.close(); // ปิดการเชื่อมต่อ MongoDB
+    await client.close(); 
   }
 });
 
